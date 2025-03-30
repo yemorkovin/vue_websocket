@@ -6,7 +6,7 @@ import re
 from time import sleep
 import json
 
-links_global = ['https://airtable.com/appcJGGcLssocnsot/shrlFJPOUmBnedWAQ/tblk1iBDpqhztUBO8']
+links_global = ['https://airtable.com/appcJGGcLssocnsot/shrlFJPOUmBnedWAQ/tblk1iBDpqhztUBO8','https://airtable.com/appcJGGcLssocnsot/shrtHbsTEmWJm4ZwN/tblk1iBDpqhztUBO8']
 new_data_json = []
 driver = webdriver.Chrome()
 for i in links_global:
@@ -79,18 +79,16 @@ for i in links_global:
             if not ne in nnn:
                 nnn.append(ne)
         nnn_dict = {}
+
         for ni in nnn:
             for ini in range(0, len(ni), 10):
                 if ni[ini + 1] in nnn_dict:
                     pass
-                    # nnn_dict[ni[ini + 1]].append([
-                    #    ni[ini], ni[ini + 2], ni[ini + 3], ni[ini + 4], ni[ini + 5], ni[ini + 6]
-                    # ])
                 else:
                     nnn_dict[ni[ini + 1]] = [
                         day_of_week, ni[ini], ni[ini + 2], ni[ini + 3], ni[ini + 4], ni[ini + 5], ni[ini + 6], ni[ini + 7],
                         ni[ini + 8], ni[ini + 9]
                     ]
-        open('json/data.json', 'w').write(json.dumps(nnn_dict))
+        open(f'json/{day_of_week}.json', 'w').write(json.dumps(nnn_dict))
     except:
         pass
