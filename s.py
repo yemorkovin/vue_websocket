@@ -1,1 +1,0 @@
-print('json/8а_пн.json' == 'json/8а_пн.json')
