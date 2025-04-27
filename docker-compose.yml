@@ -38,7 +38,7 @@ services:
     build: .
     restart: on-failure
     tty: true
-    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && daphne -b 0.0.0.0 -p 8000 navigator.asgi:application  "
     ports:
       - "8000:8000"
     volumes:
@@ -51,8 +51,52 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
       - REDIS_URL=redis://redis:6379/0
+  web_runserver:
+    image: django
+    container_name: web_runserver
+    build: .
+    restart: on-failure
+    tty: true
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8001"
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/workapp
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+      - REDIS_URL=redis://redis:6379/0
 
-
+  celery:
+    build: .
+    command: bash -c "python manage.py migrate && celery -A navigator worker --loglevel=info"
+    volumes:
+      - .:/workapp
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - DJANGO_SETTINGS_MODULE=navigator.settings
+      - CELERY_BROKER_URL=redis://redis:6379/0
+  celery-beat:
+    build: .
+    command: bash -c "python manage.py migrate && celery -A navigator beat --loglevel=info"
+    volumes:
+      - .:/workapp
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - DJANGO_SETTINGS_MODULE=navigator.settings
+      - CELERY_BROKER_URL=redis://redis:6379/0
 volumes:
   redis_data:
   postgres_data:
