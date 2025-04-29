@@ -1,6 +1,10 @@
 version: '3.12'
 
 services:
+  chrome:
+    image: selenium/standalone-chrome:latest
+    ports:
+      - "4444:4444"
   redis:
     image: redis:alpine
     ports:
@@ -48,28 +52,12 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    environment:
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
-      - REDIS_URL=redis://redis:6379/0
-  web_runserver:
-    image: django
-    container_name: web_runserver
-    build: .
-    restart: on-failure
-    tty: true
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8001"
-    ports:
-      - "8001:8001"
-    volumes:
-      - .:/workapp
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
+      chrome:
         condition: service_healthy
     environment:
       - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
       - REDIS_URL=redis://redis:6379/0
+      - SELENIUM_REMOTE_URL=http://chrome:4444/wd/hub
 
   celery:
     build: .
@@ -81,9 +69,12 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      chrome:
+        condition: service_healthy
     environment:
       - DJANGO_SETTINGS_MODULE=navigator.settings
       - CELERY_BROKER_URL=redis://redis:6379/0
+      - SELENIUM_REMOTE_URL=http://chrome:4444/wd/hub
   celery-beat:
     build: .
     command: bash -c "python manage.py migrate && celery -A navigator beat --loglevel=info"
@@ -94,9 +85,12 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      chrome:
+        condition: service_healthy
     environment:
       - DJANGO_SETTINGS_MODULE=navigator.settings
       - CELERY_BROKER_URL=redis://redis:6379/0
+      - SELENIUM_REMOTE_URL=http://chrome:4444/wd/hub
 volumes:
   redis_data:
   postgres_data:

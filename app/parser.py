@@ -3,13 +3,25 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import re
+from selenium.webdriver.chrome.options import Options
+
 from time import sleep
 import json
-
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 def parser():
     links_global = ['https://airtable.com/appcJGGcLssocnsot/shrlFJPOUmBnedWAQ/tblk1iBDpqhztUBO8','https://airtable.com/appcJGGcLssocnsot/shrtHbsTEmWJm4ZwN/tblk1iBDpqhztUBO8']
     new_data_json = []
-    driver = webdriver.Chrome()
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+
+    driver = webdriver.Remote(
+        command_executor='http://chrome:4444/wd/hub',
+        options=chrome_options
+    )
+    #driver = webdriver.Chrome()
     for i in links_global:
         times = []
         teachers = []
