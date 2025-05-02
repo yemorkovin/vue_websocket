@@ -5,6 +5,16 @@ services:
     image: selenium/standalone-chrome:latest
     ports:
       - "4444:4444"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+    healthcheck:
+      test: ['CMD', 'curl','-f','http://localhost:4444/wd/hub/status']
+      interval: 10s
+      timeout: 5s
+      retries: 5
   redis:
     image: redis:alpine
     ports:

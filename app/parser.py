@@ -22,14 +22,9 @@ def parser():
         options=chrome_options
     )
     #driver = webdriver.Chrome()
-    for i in links_global:
-        times = []
-        teachers = []
-        subs = []
-        links = []
-        cabinets = []
-        format_1 = []
 
+    for i in links_global:
+        print(i)
         driver.get(i)
         day_of_week = driver.title.split(' - ')[1]
         scroll_global = 0
@@ -51,13 +46,10 @@ def parser():
             WebDriverWait(driver, 100).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "#viewContainer"))
             )
-            #day_of_week = driver.find_elements(By.CLASS_NAME, 'top-bar-text-light-primary-hover-forced')[0].text
 
             new = []
             count = 0
-            #div_title = driver.find_elements(By.TAG_NAME, 'title')
-            #for el in div_title:
-            #    print(el.)
+
 
             while True:
                 div_teacher_z = driver.find_elements(By.CSS_SELECTOR, '''
@@ -102,6 +94,6 @@ def parser():
                             day_of_week, ni[ini], ni[ini + 2], ni[ini + 3], ni[ini + 4], ni[ini + 5], ni[ini + 6], ni[ini + 7],
                             ni[ini + 8], ni[ini + 9]
                         ]
-            open(f'navigator/app/json/{day_of_week}.json', 'w').write(json.dumps(nnn_dict))
+            open(f'/workapp/app/json/{day_of_week}.json', 'w').write(json.dumps(nnn_dict))
         except:
             pass
