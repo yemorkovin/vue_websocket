@@ -101,6 +101,7 @@ services:
       - DJANGO_SETTINGS_MODULE=navigator.settings
       - CELERY_BROKER_URL=redis://redis:6379/0
       - SELENIUM_REMOTE_URL=http://chrome:4444/wd/hub
+
 volumes:
   redis_data:
   postgres_data:

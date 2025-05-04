@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     default-libmysqlclient-dev \
     && rm -rf /var/lib/apt/lists/*
 
+
 WORKDIR /workapp
 
 COPY requirements.txt .

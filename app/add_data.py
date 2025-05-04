@@ -1,5 +1,5 @@
-#import django
-#django.setup()
+import django
+django.setup()
 from .models import Schedule
 from django.db.models import Q
 import os

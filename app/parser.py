@@ -4,13 +4,20 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import re
 from selenium.webdriver.chrome.options import Options
-
+import django
 from time import sleep
 import json
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from .models import Links
 def parser():
-    links_global = ['https://airtable.com/appcJGGcLssocnsot/shrlFJPOUmBnedWAQ/tblk1iBDpqhztUBO8','https://airtable.com/appcJGGcLssocnsot/shrtHbsTEmWJm4ZwN/tblk1iBDpqhztUBO8']
+    django.setup()
+
+    #links_global = ['https://airtable.com/appcJGGcLssocnsot/shrlFJPOUmBnedWAQ/tblk1iBDpqhztUBO8','https://airtable.com/appcJGGcLssocnsot/shrtHbsTEmWJm4ZwN/tblk1iBDpqhztUBO8']
+    ll = Links.objects.all()
+    links_global = []
+    for q in ll:
+        links_global.append(q.link)
     new_data_json = []
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument('--headless')
