@@ -104,14 +104,14 @@ services:
   frontend:
     image: node:16
     container_name: vue_frontend
-    working_dir: /workapp/frontend
+    working_dir: /workapp
     volumes:
-      - .:/workapp/frontend
+      - .:/workapp
     ports:
-      - "8080:8080"
+      - "8082:8082"
     environment:
       - NODE_ENV=development
-    command: bash -c "npm run serve"
+    command: bash -c "cd frontend && npm run serve"
     depends_on:
       - web
 
